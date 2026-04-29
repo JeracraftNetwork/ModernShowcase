@@ -88,6 +88,7 @@ public class EventManager implements Listener {
 			Location loc = e.getBlock().getLocation().subtract(e.getPlayer().getLocation());
 			Showcase show = Showcase.get(e.getBlock().getLocation());
 			show.spawnHolder(Math.abs(loc.getX())<Math.abs(loc.getZ()),new ItemStack(Material.ITEM_FRAME));
+			show.setOwner(e.getPlayer().getUniqueId());
 		}
 	}
 	
@@ -116,12 +117,21 @@ public class EventManager implements Listener {
 			PlayerInteractEvent interact = new PlayerInteractEvent(e.getPlayer(), Action.RIGHT_CLICK_BLOCK,e.getItem(), e.getClickedBlock(), e.getBlockFace(), e.getHand());
 			dependCheck = interact;
 			Bukkit.getPluginManager().callEvent(interact);
-			
-			if(!e.getPlayer().isSneaking()||
-					interact.useInteractedBlock()==Result.DENY||!e.getPlayer().hasPermission("modernshowcase.edit")) { 
+
+			boolean canEdit =
+					e.getPlayer().hasPermission("modernshowcase.admin")
+							|| (
+							e.getPlayer().hasPermission("modernshowcase.edit")
+									&& showcase.isOwner(e.getPlayer())
+					);
+
+			if (!e.getPlayer().isSneaking()
+					|| interact.useInteractedBlock() == Result.DENY
+					|| !canEdit) {
 				ShowcaseUI.preview(e.getPlayer(), showcase);
-			} else 
+			} else {
 				ShowcaseUI.open(e.getPlayer(), showcase);
+			}
 			if(e.getClickedBlock().getType()==Material.CHEST)
 				e.getClickedBlock().setType(origianl);
 			

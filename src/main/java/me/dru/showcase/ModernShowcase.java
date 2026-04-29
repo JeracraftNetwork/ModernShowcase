@@ -44,7 +44,7 @@ public class ModernShowcase extends JavaPlugin {
 		registerEvents();
 		registerCommands();
 		registerCrafting();
-		registerBstats();
+		//registerBstats();
 		GUILib.register(this);
 		ScheduleUtil.GLOBAL.runTaskTimer(instance, ()-> EventManager.rotate(), config.rotatePeroid, config.rotatePeroid);
 		Bukkit.getLogger().info("ModernShowcase is enabled.");

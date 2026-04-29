@@ -1,0 +1,25 @@
+name: ModernShowcase
+main: me.dru.showcase.ModernShowcase
+version: 1.7.2
+folia-supported: true
+description: "A good showcase plugin"
+author: Dru_TNT
+softdepend: [CoreProtect]
+api-version: 1.19
+commands:
+  ModernShowcase:
+    description: "ModernShowcase management command"
+    aliases: [ms,showcase]
+permissions:
+  modernshowcase.craft:
+     description: Allows you to craft showcase
+     default: false
+  modernshowcase.place:
+     description: Allows you to place showcase
+     default: true
+  modernshowcase.edit:
+     description: Allows you to edit showcase
+     default: true
+  modernshowcase.admin:
+     description: Allows you to bypass owner check for showcases
+     default: false

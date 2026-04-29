@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ModernShowcase">
+    <output-path>$PROJECT_DIR$/out/artifacts/ModernShowcase</output-path>
+    <root id="archive" name="ModernShowcase.jar">
+      <element id="module-output" name="ModernShowcase" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/GUILibRD/guilibrd/2.3-SNAPSHOT/guilibrd-2.3-20241124.124145-3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/bstats/bstats-base/3.0.0/bstats-base-3.0.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/bstats/bstats-bukkit/3.0.0/bstats-bukkit-3.0.0.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

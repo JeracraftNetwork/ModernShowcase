@@ -19,6 +19,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.Display.Billboard;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -467,9 +468,31 @@ public class Showcase {
 		else 
 			rotatesInstance.remove(block);
 	}
-	
-	
 
+
+	public void setOwner(UUID owner) {
+		getDataContainer().set(
+				spacedKey(block, "owner"),
+				PersistentDataType.STRING,
+				owner.toString()
+		);
+	}
+
+	public UUID getOwner() {
+		String raw = getDataContainer().get(spacedKey(block, "owner"), PersistentDataType.STRING);
+		if (raw == null) return null;
+
+		try {
+			return UUID.fromString(raw);
+		} catch (IllegalArgumentException ex) {
+			return null;
+		}
+	}
+
+	public boolean isOwner(Player player) {
+		UUID owner = getOwner();
+		return owner != null && owner.equals(player.getUniqueId());
+	}
 
 	
 }
