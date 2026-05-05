@@ -105,80 +105,37 @@ public class EventManager implements Listener {
 	PlayerInteractEvent dependCheck;
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onInteract(PlayerInteractEvent e) {
-		if(e!=dependCheck&&e.getHand()!=EquipmentSlot.OFF_HAND&&e.getAction()==Action.RIGHT_CLICK_BLOCK&&Showcase.isShowcase(e.getClickedBlock().getLocation())) {
+		if (e != dependCheck
+				&& e.getHand() != EquipmentSlot.OFF_HAND
+				&& e.getAction() == Action.RIGHT_CLICK_BLOCK
+				&& Showcase.isShowcase(e.getClickedBlock().getLocation())) {
+
 			e.setCancelled(true);
-			
-			if((coreProtect!=null&&coreProtect.isInspecting(e.getPlayer())))
+
+			if (coreProtect != null && coreProtect.isInspecting(e.getPlayer()))
 				return;
-			Showcase showcase = Showcase.get(e.getClickedBlock().getLocation());
-			
-			Material origianl = e.getClickedBlock().getType();
-			e.getClickedBlock().setType(Material.CHEST);
-			PlayerInteractEvent interact = new PlayerInteractEvent(e.getPlayer(), Action.RIGHT_CLICK_BLOCK,e.getItem(), e.getClickedBlock(), e.getBlockFace(), e.getHand());
-			dependCheck = interact;
-			Bukkit.getPluginManager().callEvent(interact);
 
-			boolean canEdit =
-					e.getPlayer().hasPermission("modernshowcase.admin")
-							|| (
-							e.getPlayer().hasPermission("modernshowcase.edit")
-									&& showcase.isOwner(e.getPlayer())
-					);
+			Player player = e.getPlayer();
+			Location loc = e.getClickedBlock().getLocation();
+			Showcase showcase = Showcase.get(loc);
 
-			if (!e.getPlayer().isSneaking()
-					|| interact.useInteractedBlock() == Result.DENY
-					|| !canEdit) {
-				ShowcaseUI.preview(e.getPlayer(), showcase);
-			} else {
-				ShowcaseUI.open(e.getPlayer(), showcase);
-			}
-			if(e.getClickedBlock().getType()==Material.CHEST)
-				e.getClickedBlock().setType(origianl);
-			
-			/*
-			 * if(e.getPlayer().isSneaking()&&e.getItem()!=null&&Showcase.isShowcase(e.getItem())) {
-				return;
-			}
-			e.setCancelled(true);
-			
-			 * Material origianl = e.getClickedBlock().getType();
-			e.getClickedBlock().setType(Material.CHEST);
-			
-			boolean sneak = e.getPlayer().isSneaking();
-			if(sneak)
-				e.getPlayer().setSneaking(false);
-			e.getPlayer().setSneaking(false);
-			PlayerInteractEvent interact = new PlayerInteractEvent(e.getPlayer(), Action.RIGHT_CLICK_BLOCK,e.getItem(), e.getClickedBlock(), e.getBlockFace(), e.getHand());
-			dependCheck = interact;
-			Bukkit.getPluginManager().callEvent(interact);
-			if(sneak) {
-				if(interact.useInteractedBlock()!=Result.DENY) 
-					ShowcaseUI.open(e.getPlayer(), showcase);
-				else 
-					ShowcaseUI.preview(e.getPlayer(), showcase);
-					
-				e.getClickedBlock().setType(origianl);
-				return;
-			}
-			
-			if(e.getItem()!=null&&interact.useInteractedBlock()!=Result.DENY) {
-				if(coreProtect!=null)
-					coreProtect.logShowcase(e.getPlayer(),((Chest)e.getClickedBlock().getState()),showcase.getItem(),e.getItem());
-				if(e.getPlayer().getInventory().firstEmpty()>=0)
-					e.getPlayer().getInventory().addItem(showcase.getItem());
-				else
-					e.getPlayer().getWorld().dropItem(e.getPlayer().getLocation(), showcase.getItem(),i->i.setPickupDelay(0));
+			// Use region-based PLAYER helper
+			ScheduleUtil.PLAYER.runTask(plugin, player, () -> {
 
-				showcase.setItem(e.getItem());	
-				e.getPlayer().getInventory().setItem(EquipmentSlot.HAND, new ItemStack(Material.AIR));
-				e.getPlayer().getWorld().playSound(e.getPlayer().getLocation(),Sound.ITEM_ARMOR_EQUIP_LEATHER,1f,1f);
-				
-			} else {
-				ShowcaseUI.preview(e.getPlayer(),showcase);
-			}
-			e.getClickedBlock().setType(origianl);
-			*/
+				boolean canEdit =
+						player.hasPermission("modernshowcase.admin")
+								|| (
+								player.hasPermission("modernshowcase.edit")
+										&& showcase.isOwner(player)
+						);
 
+				if (!player.isSneaking() || !canEdit) {
+					ShowcaseUI.preview(player, showcase);
+				} else {
+					ShowcaseUI.open(player, showcase);
+				}
+
+			});
 		}
 	}
 

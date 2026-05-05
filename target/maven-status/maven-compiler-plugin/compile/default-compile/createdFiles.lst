@@ -1,0 +1,14 @@
+me\dru\showcase\utils\CoreProtectShowcaseAdapter.class
+me\dru\showcase\ModernShowcase.class
+me\dru\showcase\ShowcaseUI.class
+me\dru\showcase\block\Showcase.class
+me\dru\showcase\Commands.class
+me\dru\showcase\EventManager.class
+me\dru\showcase\utils\ScheduleUtil$GLOBAL.class
+me\dru\showcase\block\Showcase$1.class
+me\dru\showcase\utils\ScheduleUtil$ENTITY.class
+me\dru\showcase\config\Config.class
+me\dru\showcase\utils\ScheduleUtil$PLAYER.class
+me\dru\showcase\Lang.class
+me\dru\showcase\utils\ScheduleUtil$REGION.class
+me\dru\showcase\utils\ScheduleUtil.class

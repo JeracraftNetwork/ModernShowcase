@@ -3,6 +3,7 @@ package me.dru.showcase;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 
+import me.dru.showcase.utils.ScheduleUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -67,10 +68,11 @@ public class ShowcaseUI {
 		g.addPanel(UIRegion.single(8,0), new IntegerLeverPanel(new StatefulIcon(pp->{
 			return GUILib.getItem(Material.POWERED_RAIL, lang.auto_rotate, (int)Math.max(1, showcase.getAutoRotateSpeed()*10f), lang.desc);
 		}), (int)(showcase.getAutoRotateSpeed()*10f), -config.maxRotateSpeed, config.maxRotateSpeed, value->showcase.setAutoRotateSpeed(value/10f)));
-		
-		
-		
-		g.open(p);
+
+
+		ScheduleUtil.PLAYER.runTask(ModernShowcase.getInstance(), p, () -> {
+			g.open(p);
+		});
 	}
 	
 	private static void setItems(Player p, Showcase showcase) {
@@ -109,23 +111,31 @@ public class ShowcaseUI {
 				e.gui.render(p);	
 			});
 		}
-		g.open(p);
+		ScheduleUtil.PLAYER.runTask(ModernShowcase.getInstance(), p, () -> {
+			g.open(p);
+		});
 	}
 
 	private static HashSet<Inventory> showcases = new HashSet<>();
 	public static void preview(Player p, Showcase showcase) {
-		if(showcase.getItemHolder()==null) {
+		if (showcase.getItemHolder() == null) {
 			showcase.despawn();
 			return;
 		}
-		Inventory inv = Bukkit.createInventory(null,InventoryType.DISPENSER," ");
-		for(int i=0;i<9;i++) {
+
+		Inventory inv = Bukkit.createInventory(null, 9, " ");
+
+		for (int i = 0; i < 9; i++) {
 			ItemStack item = showcase.getItem(i);
-			if(item!=null)
+			if (item != null)
 				inv.setItem(i, item);
 		}
+
 		showcases.add(inv);
-		p.openInventory(inv);
+
+		ScheduleUtil.PLAYER.runTask(ModernShowcase.getInstance(), p, () -> {
+			p.openInventory(inv);
+		});
 	}
 	
 	public static boolean isPreviewInventory(Inventory inventory) {

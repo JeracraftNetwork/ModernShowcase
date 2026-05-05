@@ -5,6 +5,7 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemDisplay;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.util.concurrent.TimeUnit;
@@ -32,6 +33,20 @@ public class ScheduleUtil {
 		}
 		
 	}
+
+    public static class PLAYER {
+        public static void runTask(Plugin plugin, Player player, Runnable task) {
+            if (isFolia) {
+                Bukkit.getRegionScheduler().run(
+                        plugin,
+                        player.getLocation(),
+                        ignored -> task.run()
+                );
+            } else {
+                Bukkit.getScheduler().runTask(plugin, task);
+            }
+        }
+    }
 	
     public static class GLOBAL {
         public static void runTask(Plugin plugin, Runnable task) {
