@@ -16,22 +16,22 @@ import net.md_5.bungee.api.chat.BaseComponent;
 public class Lang { 
 	public String defaultLang = "en_us";
 	public String settingTitle = "Showcase settings";
-	public String scale = "§r§fScale Size";
-	public String current = ChatColor.GOLD+"Current: {0}";
-	public String toggleFixed = "§rToggle Fixed Display";
-	public String toggleGlass = "§rToggle Glass Display";
-	public String yawRotate = "§r§fYaw Direction";
-	public String pitchRotate = "§r§fPitch Direction";
-	public String zRotate = "§r§fRoll Direction";
-	public String auto_rotate = "§r§fAuto Rotation Speed";
-	public String displayitems = "§r§fDisplay Items";
+	public String scale = ChatColor.RESET + "" + ChatColor.WHITE + "Scale Size";
+	public String toggleFixed = ChatColor.RESET + "Toggle Fixed Display";
+	public String toggleGlass = ChatColor.RESET + "Toggle Glass Display";
+	public String yawRotate = ChatColor.RESET + "" + ChatColor.WHITE + "Yaw Direction";
+	public String pitchRotate = ChatColor.RESET + "" + ChatColor.WHITE + "Pitch Direction";
+	public String zRotate = ChatColor.RESET + "" + ChatColor.WHITE + "Roll Direction";
+	public String auto_rotate = ChatColor.RESET + "" + ChatColor.WHITE + "Auto Rotation Speed";
+	public String displayitems = ChatColor.RESET + "" + ChatColor.WHITE + "Display Items";
+	public String current = ChatColor.GOLD + "Current: {0}";
 
 	public List<String> desc = Arrays.asList(
 			current,
 			" ",
-			ChatColor.GRAY+"Right click to +1ﾟ",
-			ChatColor.GRAY+"Left click to -1ﾟ",
-			ChatColor.GRAY+"Hold Shift = 10ﾟ");
+			ChatColor.GRAY + "Right click to +1ﾟ",
+			ChatColor.GRAY + "Left click to -1ﾟ",
+			ChatColor.GRAY + "Hold Shift = 10ﾟ");
 	public List<String> scaleDesc = Arrays.asList(
 			current,
 			" ",
@@ -42,26 +42,26 @@ public class Lang {
 	
 	public String showcase = " Showcase"; 
 	public List<String> showcaseDesc = Arrays.asList(
-			ChatColor.GRAY+ "Right click to swap/preview item", 
-			ChatColor.GRAY+ "Shift + Right Click to edit settings");
+			ChatColor.GRAY + "Right click to swap/preview item",
+			ChatColor.GRAY + "Shift + Right Click to edit settings");
 	public String glass = "Glass"; 
-	public String TINTED_GLASS= "Tinted Glass";
-	public String WHITE_STAINED_GLASS= "White Glass";
-	public String LIGHT_GRAY_STAINED_GLASS= "Light Gray Glass";
-	public String GRAY_STAINED_GLASS="Gray Glass";
-	public String BLACK_STAINED_GLASS="Black Glass";
-	public String BROWN_STAINED_GLASS="Brown Glass";
-	public String RED_STAINED_GLASS="Red Glass";
-	public String ORANGE_STAINED_GLASS="Orange Glass";
-	public String YELLOW_STAINED_GLASS="Yellow Glass";
-	public String LIME_STAINED_GLASS= "Lime Glass";
-	public String GREEN_STAINED_GLASS="Green Glass";
-	public String CYAN_STAINED_GLASS="Cyan Glass";
-	public String BLUE_STAINED_GLASS="Blue Glass";
+	public String TINTED_GLASS = "Tinted Glass";
+	public String WHITE_STAINED_GLASS = "White Glass";
+	public String LIGHT_GRAY_STAINED_GLASS = "Light Gray Glass";
+	public String GRAY_STAINED_GLASS = "Gray Glass";
+	public String BLACK_STAINED_GLASS = "Black Glass";
+	public String BROWN_STAINED_GLASS = "Brown Glass";
+	public String RED_STAINED_GLASS = "Red Glass";
+	public String ORANGE_STAINED_GLASS = "Orange Glass";
+	public String YELLOW_STAINED_GLASS = "Yellow Glass";
+	public String LIME_STAINED_GLASS = "Lime Glass";
+	public String GREEN_STAINED_GLASS = "Green Glass";
+	public String CYAN_STAINED_GLASS = "Cyan Glass";
+	public String BLUE_STAINED_GLASS = "Blue Glass";
 	public String LIGHT_BLUE_STAINED_GLASS = "Light Blue Glass";
-	public String PURPLE_STAINED_GLASS="Purple Glass";
-	public String MAGENTA_STAINED_GLASS="Magenta Glass";
-	public String PINK_STAINED_GLASS="Pink Glass";
+	public String PURPLE_STAINED_GLASS = "Purple Glass";
+	public String MAGENTA_STAINED_GLASS ="Magenta Glass";
+	public String PINK_STAINED_GLASS = "Pink Glass";
 
 	public String placedLimitReach = "The showcase limit for this chunk has been reached!";
 	public String itemBlacklist = "You don't have permission to put in this item!";
