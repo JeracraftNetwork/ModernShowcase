@@ -32,7 +32,7 @@ public class Config {
 		minSize = con.getInt("min-size", 1);
 		maxRotateSpeed = con.getInt("max-rotate-speed", 25);
 		rotatePeroid = con.getInt("rotate-ticks-peroid", 2);
-		placedPerChunkLimit = con.getInt("placed-limit-per-chunk",-1);
+		placedPerChunkLimit = con.getInt("placed-limit-per-chunk",24);
 		itemSlotLimit = Math.min(con.getInt("showcase-slots-limit",9), 9);
 		viewRange = (float) (Math.max(1, con.getDouble("view-range",80)))/80f;
 		if(con.contains("blackitems"))

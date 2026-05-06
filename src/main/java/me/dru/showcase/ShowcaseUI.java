@@ -1,6 +1,9 @@
 package me.dru.showcase;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import me.dru.showcase.utils.ScheduleUtil;
@@ -116,7 +119,7 @@ public class ShowcaseUI {
 		});
 	}
 
-	private static HashSet<Inventory> showcases = new HashSet<>();
+	private static final Map<UUID, Inventory> previewInventories = new HashMap<>();
 	public static void preview(Player p, Showcase showcase) {
 		if (showcase.getItemHolder() == null) {
 			showcase.despawn();
@@ -127,26 +130,38 @@ public class ShowcaseUI {
 
 		for (int i = 0; i < 9; i++) {
 			ItemStack item = showcase.getItem(i);
-			if (item != null)
+			if (item != null) {
 				inv.setItem(i, item);
+			}
 		}
 
-		showcases.add(inv);
+		Inventory old = previewInventories.put(p.getUniqueId(), inv);
+		if (old != null) {
+			old.clear();
+		}
 
 		ScheduleUtil.PLAYER.runTask(ModernShowcase.getInstance(), p, () -> {
 			p.openInventory(inv);
 		});
 	}
-	
-	public static boolean isPreviewInventory(Inventory inventory) {
-		return showcases.contains(inventory);
+
+	public static boolean isPreviewInventory(Player player, Inventory inventory) {
+		return previewInventories.get(player.getUniqueId()) == inventory;
 	}
-	
-	public static boolean closePreviewInventory(Inventory inventory) {
-		inventory.clear();
-		return showcases.remove(inventory);
+
+	public static void closePreviewInventory(Player player) {
+		Inventory inv = previewInventories.remove(player.getUniqueId());
+		if (inv != null) {
+			inv.clear();
+		}
 	}
-	
+
+	public static void forceClear(Player player) {
+		closePreviewInventory(player);
+		player.closeInventory();
+		player.updateInventory();
+	}
+
 	
 	
 }

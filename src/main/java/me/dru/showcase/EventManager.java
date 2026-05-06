@@ -32,6 +32,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.EntitiesLoadEvent;
 import org.bukkit.event.world.EntitiesUnloadEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -166,23 +167,33 @@ public class EventManager implements Listener {
 			Showcase.get(b.getLocation()).despawn();
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onClick(InventoryClickEvent e) {
-		if(ShowcaseUI.isPreviewInventory(e.getInventory()))
+		if (e.getWhoClicked() instanceof Player player
+				&& ShowcaseUI.isPreviewInventory(player, e.getInventory())) {
 			e.setCancelled(true);
+		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onDrag(InventoryDragEvent e) {
-		if(ShowcaseUI.isPreviewInventory(e.getInventory()))
+		if (e.getWhoClicked() instanceof Player player
+				&& ShowcaseUI.isPreviewInventory(player, e.getInventory())) {
 			e.setCancelled(true);
+		}
 	}
-	
+
 	@EventHandler
 	public void onCloseInv(InventoryCloseEvent e) {
-		if(ShowcaseUI.isPreviewInventory(e.getInventory()))
-			ShowcaseUI.closePreviewInventory(e.getInventory());
+		if (e.getPlayer() instanceof Player player) {
+			ShowcaseUI.closePreviewInventory(player);
+		}
+	}
+
+	@EventHandler
+	public void onQuit(PlayerQuitEvent e) {
+		ShowcaseUI.closePreviewInventory(e.getPlayer());
 	}
 	
 	@EventHandler

@@ -50,7 +50,6 @@ public class CoreProtectShowcaseAdapter {
 	    BlockGroup.CONTAINERS.add(Material.LIGHT_BLUE_STAINED_GLASS);
 	    BlockGroup.CONTAINERS.add(Material.PURPLE_STAINED_GLASS);
 	    BlockGroup.CONTAINERS.add(Material.MAGENTA_STAINED_GLASS);
-	    BlockGroup.CONTAINERS.add(Material.GREEN_STAINED_GLASS);
 	    BlockGroup.CONTAINERS.add(Material.PINK_STAINED_GLASS);
 	    
 	}
