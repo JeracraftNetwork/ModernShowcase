@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import me.dru.showcase.utils.ScheduleUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Player;
@@ -27,6 +28,10 @@ import me.dru.showcase.block.Showcase;
 import me.dru.showcase.config.Config;
 
 public class ShowcaseUI {
+
+	private static final Map<UUID, Inventory> previewInventories = new HashMap<>();
+	private static final Map<UUID, Location> previewLocations = new HashMap<>();
+	private static final Map<UUID, Location> editorLocations = new HashMap<>();
 	
 	public static void open(Player p, Showcase showcase) {
 		Lang lang = ModernShowcase.getLang(p);
@@ -73,7 +78,10 @@ public class ShowcaseUI {
 		}), (int)(showcase.getAutoRotateSpeed()*10f), -config.maxRotateSpeed, config.maxRotateSpeed, value->showcase.setAutoRotateSpeed(value/10f)));
 
 
+		Location showcaseLoc = showcase.getBlock().getLocation();
+
 		ScheduleUtil.PLAYER.runTask(ModernShowcase.getInstance(), p, () -> {
+			editorLocations.put(p.getUniqueId(), showcaseLoc);
 			g.open(p);
 		});
 	}
@@ -115,11 +123,11 @@ public class ShowcaseUI {
 			});
 		}
 		ScheduleUtil.PLAYER.runTask(ModernShowcase.getInstance(), p, () -> {
+			editorLocations.put(p.getUniqueId(), showcase.getBlock().getLocation());
 			g.open(p);
 		});
 	}
 
-	private static final Map<UUID, Inventory> previewInventories = new HashMap<>();
 	public static void preview(Player p, Showcase showcase) {
 		if (showcase.getItemHolder() == null) {
 			showcase.despawn();
@@ -135,12 +143,23 @@ public class ShowcaseUI {
 			}
 		}
 
-		Inventory old = previewInventories.put(p.getUniqueId(), inv);
-		if (old != null) {
-			old.clear();
-		}
+		UUID uuid = p.getUniqueId();
+
+		Location showcaseLoc = showcase.getBlock().getLocation();
 
 		ScheduleUtil.PLAYER.runTask(ModernShowcase.getInstance(), p, () -> {
+			Inventory top = p.getOpenInventory().getTopInventory();
+
+			// If another GUI/container opened before this preview task ran, abort.
+			if (top != null
+					&& top.getType() != InventoryType.CRAFTING
+					&& top.getType() != InventoryType.PLAYER
+					&& !isPreviewInventory(p, top)) {
+				return;
+			}
+
+			previewInventories.put(uuid, inv);
+			previewLocations.put(uuid, showcaseLoc);
 			p.openInventory(inv);
 		});
 	}
@@ -150,7 +169,12 @@ public class ShowcaseUI {
 	}
 
 	public static void closePreviewInventory(Player player) {
-		Inventory inv = previewInventories.remove(player.getUniqueId());
+		UUID uuid = player.getUniqueId();
+
+		Inventory inv = previewInventories.remove(uuid);
+		previewLocations.remove(uuid);
+		editorLocations.remove(uuid);
+
 		if (inv != null) {
 			inv.clear();
 		}
@@ -160,6 +184,40 @@ public class ShowcaseUI {
 		closePreviewInventory(player);
 		player.closeInventory();
 		player.updateInventory();
+	}
+
+	public static void closeViewersOfShowcase(Location location) {
+		Location blockLoc = location.getBlock().getLocation();
+
+		for (Player player : Bukkit.getOnlinePlayers()) {
+			UUID uuid = player.getUniqueId();
+
+			Location previewLoc = previewLocations.get(uuid);
+			Location editorLoc = editorLocations.get(uuid);
+
+			boolean viewingPreview = previewLoc != null && sameBlock(previewLoc, blockLoc);
+			boolean viewingEditor = editorLoc != null && sameBlock(editorLoc, blockLoc);
+
+			if (viewingPreview || viewingEditor) {
+				closePreviewInventory(player);
+				editorLocations.remove(uuid);
+
+				ScheduleUtil.PLAYER.runTask(ModernShowcase.getInstance(), player, () -> {
+					player.closeInventory();
+					player.updateInventory();
+				});
+			}
+		}
+	}
+
+	private static boolean sameBlock(Location a, Location b) {
+		if (a == null || b == null) return false;
+		if (a.getWorld() == null || b.getWorld() == null) return false;
+
+		return a.getWorld().equals(b.getWorld())
+				&& a.getBlockX() == b.getBlockX()
+				&& a.getBlockY() == b.getBlockY()
+				&& a.getBlockZ() == b.getBlockZ();
 	}
 
 	

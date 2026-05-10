@@ -7,14 +7,11 @@ import java.util.HashSet;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -29,18 +26,15 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.EntitiesLoadEvent;
 import org.bukkit.event.world.EntitiesUnloadEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.util.Transformation;
-import org.jetbrains.annotations.Nullable;
 import org.joml.AxisAngle4f;
 import org.joml.Vector3f;
 
@@ -92,10 +86,12 @@ public class EventManager implements Listener {
 			show.setOwner(e.getPlayer().getUniqueId());
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBreak(BlockBreakEvent e) {
-		if(!e.isCancelled()&&Showcase.isShowcase(e.getBlock().getLocation())) {
+		if (!e.isCancelled() && Showcase.isShowcase(e.getBlock().getLocation())) {
+			ShowcaseUI.closeViewersOfShowcase(e.getBlock().getLocation());
+
 			Showcase showcase = Showcase.get(e.getBlock().getLocation());
 			Showcase.addPlacedAmountOnChunk(e.getBlock().getChunk(), -1);
 			showcase.despawn();
@@ -140,31 +136,45 @@ public class EventManager implements Listener {
 		}
 	}
 
-	
+
 
 	@EventHandler(priority = EventPriority.LOWEST)
-	public void onEntityExplode(EntityExplodeEvent e) { 
-		for(Block b : e.blockList())
-			Showcase.get(b.getLocation()).despawn();	
-	}
-	
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void onBlockExplode(BlockExplodeEvent e) { 
-		for(Block b : e.blockList())
-			Showcase.get(b.getLocation()).despawn();	
-	}
-	
-	@EventHandler
-	public void onPistonExtend(BlockPistonExtendEvent e) {
-		for(Block b : e.getBlocks()) {
-			Showcase.get(b.getLocation()).despawn();
+	public void onEntityExplode(EntityExplodeEvent e) {
+		for (Block b : e.blockList()) {
+			if (Showcase.isShowcase(b.getLocation())) {
+				ShowcaseUI.closeViewersOfShowcase(b.getLocation());
+				Showcase.get(b.getLocation()).despawn();
+			}
 		}
 	}
-	
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onBlockExplode(BlockExplodeEvent e) {
+		for (Block b : e.blockList()) {
+			if (Showcase.isShowcase(b.getLocation())) {
+				ShowcaseUI.closeViewersOfShowcase(b.getLocation());
+				Showcase.get(b.getLocation()).despawn();
+			}
+		}
+	}
+
+	@EventHandler
+	public void onPistonExtend(BlockPistonExtendEvent e) {
+		for (Block b : e.getBlocks()) {
+			if (Showcase.isShowcase(b.getLocation())) {
+				ShowcaseUI.closeViewersOfShowcase(b.getLocation());
+				Showcase.get(b.getLocation()).despawn();
+			}
+		}
+	}
+
 	@EventHandler
 	public void onPistonRetract(BlockPistonRetractEvent e) {
-		for(Block b : e.getBlocks()) {
-			Showcase.get(b.getLocation()).despawn();
+		for (Block b : e.getBlocks()) {
+			if (Showcase.isShowcase(b.getLocation())) {
+				ShowcaseUI.closeViewersOfShowcase(b.getLocation());
+				Showcase.get(b.getLocation()).despawn();
+			}
 		}
 	}
 
@@ -239,9 +249,9 @@ public class EventManager implements Listener {
 					display.setItemDisplay(number);
 				}
 				ItemDisplay item = display.getItemHolder();
-				Transformation transfom = item.getTransformation();
-				transfom.getLeftRotation().set(new AxisAngle4f( (float)Math.PI*rot*display.getAutoRotateSpeed(), new Vector3f(0, 1, 0)));
-				item.setTransformation(transfom);
+				Transformation transform = item.getTransformation();
+				transform.getLeftRotation().set(new AxisAngle4f( (float)Math.PI*rot*display.getAutoRotateSpeed(), new Vector3f(0, 1, 0)));
+				item.setTransformation(transform);
 				
 			});
 		});

@@ -1,5 +1,6 @@
 package me.dru.showcase;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,9 +15,24 @@ import me.dru.showcase.block.Showcase;
 public class Commands implements CommandExecutor {
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		sender.sendMessage(ChatColor.AQUA+ "ModernShowcase, Made by Dru_TNT");
-		sender.sendMessage(ChatColor.AQUA+ "Join our DC for more support: https://discord.gg/9c287zPpUZ");
-		return true;
-	}
+		if (args.length >= 2 && args[0].equalsIgnoreCase("unstuck")) {
+			if (!sender.hasPermission("modernshowcase.admin")) {
+				sender.sendMessage(ChatColor.RED + "No permission.");
+				return true;
+			}
+
+			Player target = Bukkit.getPlayerExact(args[1]);
+			if (target == null) {
+				sender.sendMessage(ChatColor.RED + "Player not found.");
+				return true;
+			}
+
+			ShowcaseUI.forceClear(target);
+			sender.sendMessage(ChatColor.GREEN + "Cleared showcase preview state for " + target.getName() + ".");
+			target.sendMessage(ChatColor.GREEN + "Your showcase preview state has been cleared.");
+			return true;
+		}
+        return false;
+    }
 
 }
